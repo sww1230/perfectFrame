@@ -1,5 +1,8 @@
 import Immutable from 'immutable'
-localStorage.displayNum = 1;
+
+localStorage.fetch = 'false'; //关闭ajax请求，'true'打开请求
+
+
 const DefaultData = Immutable.List([{
 
 
@@ -9,7 +12,10 @@ const DefaultData = Immutable.List([{
     //开发人员姓名：xxx
     //前端pOST、get...数据
 
-
+    isLogin: {
+        ret: 0,
+        data: 'ssdsdsd'
+    }
 
 }]);
 

@@ -29,34 +29,41 @@ function FetchData(state = defaultData, action) {
                 }
             }
             action.data.beforeCallback && action.data.beforeCallback();
-            fetch(Api[action.data.url] + getParas, postParas).then(response => {
-                return response.json();
-            }).then(json => {
 
-                //按ret约定显示错误提示
-                if ( ('ret' in json) && json.ret != 1) {
-                    //alert(json.msg);
-                    tipper.emitMsg('ServerError', json.msg);
+            if (localStorage.fetch == 'true') { //真实的请求url，在Config/defaultData可更改localStorage.fetch的值，是否调试 string类型，值'true'||'false'
 
-                    action.data.finalCallback && action.data.finalCallback(json);
+                fetch(Api[action.data.url] + getParas, postParas).then(response => {
+                    return response.json();
+                }).then(json => {
 
-                    console.log('Request:' , action.data.url , ' Error：' , json );
-                    return;
-                }
+                    //按ret约定显示错误提示
+                    if (('ret' in json) && json.ret != 1) {
+                        //alert(json.msg);
+                        tipper.emitMsg('ServerError', json.msg);
 
-                //处理返回的正常的数据
-                action.data.succeed({
-                    json: json,
-                    name: action.data.url,
-                    callback: action.data.afterCallback ? action.data.afterCallback : false,
-                    finalCall: action.data.finalCallback,
+                        action.data.finalCallback && action.data.finalCallback(json);
+
+                        console.log('Request:', action.data.url, ' Error：', json);
+                        return;
+                    }
+
+                    //处理返回的正常的数据
+                    action.data.succeed({
+                        json: json,
+                        name: action.data.url,
+                        callback: action.data.afterCallback ? action.data.afterCallback : false,
+                        finalCall: action.data.finalCallback,
+                    })
+
+                }).catch(err => {
+                    action.data.afterCallback && action.data.afterCallback();
                 })
-
-            }).catch(err => {
-
+            } else { //假请求 调试
+                if (('ret' in state[0][action.data.url]) && state[0][action.data.url].ret != 1) {
+                    tipper.emitMsg('ServerError', state[0][action.data.url].msg);
+                }
                 action.data.afterCallback && action.data.afterCallback();
-                // console.log('请求 ' + action.data.url + ' error');
-            })
+            }
             return [...state]
 
         case AJAX_SUCCEED:

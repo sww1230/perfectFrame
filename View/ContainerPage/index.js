@@ -31,9 +31,11 @@ class Index extends React.Component {
   }
 
 
-  componentDidMount() {
+  componentDidMount() {}
 
-    //接口返回错误信息的展示形式
+  componentWillMount() {
+
+    //接口返回错误信息的展示形式，必须包含在willMount下，勿动。该方法不可改变！！
     tipper.setHandler('ServerError', (msg) => {
       Modal.error({
         title: '错误信息',
@@ -41,17 +43,43 @@ class Index extends React.Component {
       });
     });
 
-  }
+    //获取页面所需数据，全部罗列在此，完成数据初始化
+    this.isLogin = this.props.data.FetchData[0].isLogin;
 
-  componentWillMount() {
+    //进行请求，真假调试可更改Config/defaultData下localStorage.fetch的值，是否调试 string类型，值'true'||'false'
+    const {
+      ajaxData,
+      ajaxSucceed
+    } = this.props;
+
+    ajaxData({
+      url: 'isLogin',
+      method: 'post',
+      succeed: ajaxSucceed,
+      beforeCallback: () => {
+
+        //调试时可改变数据的值进行调试，真请求时删除该数据的更改
+        this.isLogin.ret = 0;
+        this.isLogin.msg = 'error';
+        this.isLogin.data = 12121212;
+
+      },
+      afterCallback: () => {
+        console.log(this.props.data.FetchData[0].isLogin);
+      }
+    })
 
   }
 
   render() {
 
-    return (
-      <h1 className="text-center">Welcome to you !</h1>
-    )
+    if (!this.isLogin.ret) { //条件不具备时
+      return <div></div>
+    } else {
+      return (
+        <h1 className="text-center">Welcome to you !</h1>
+      )
+    }
 
   }
 }
