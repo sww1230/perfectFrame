@@ -21,6 +21,8 @@ function FetchData(state = defaultData, action) {
             } else {
                 postParas = {
                     method: 'post',
+                    // mode: 'cors', //“cors” 允许不同域的请求，但要求有正确的 CORs 头信息。
+                    // credentials: 'include', //附带cookies之类的凭证信息，可以将 credentials 参数设置成 “include” 值。
                     headers: {
                         "Content-Type": "application/json", //"text/plain",//"application/json" //"application/x-www-form-urlencoded"
                     },

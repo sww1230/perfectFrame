@@ -59,7 +59,7 @@ class Index extends React.Component {
       beforeCallback: () => {
 
         //调试时可改变数据的值进行调试，真请求时删除该数据的更改
-        this.isLogin.ret = 0;
+        this.isLogin.ret = 1;
         this.isLogin.msg = 'error';
         this.isLogin.data = 12121212;
 
@@ -77,7 +77,10 @@ class Index extends React.Component {
       return <div></div>
     } else {
       return (
-        <h1 className="text-center">Welcome to you !</h1>
+        <div>
+            <h1 className="text-center">Welcome to you !</h1> 
+            {React.cloneElement(this.props.children, {store: this.props})}
+        </div>
       )
     }
 

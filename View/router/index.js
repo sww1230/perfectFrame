@@ -59,7 +59,7 @@ class RouterConfig extends React.Component {
       <Provider store={store}>
           <Router history={history}>
             <Route path="/" component={Index}>
-
+              <IndexRoute component={NoMatch} />
             </Route>
             <Route path="*" component={NoMatch}/>
           </Router>
